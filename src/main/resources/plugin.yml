@@ -1,0 +1,26 @@
+name: ChunkRefresher
+version: ${version}
+main: github.xhserver123.chunkrefresher.ChunkRefresherPlugin
+api-version: '26.2'
+author: XHServer
+description: 允许玩家用命令手动重新发送（刷新）周围区块，使客户端重新渲染地形
+website: https://github.com/xhserver123/ChunkRefresher
+folia-supported: true
+commands:
+  refreshchunk:
+    description: 手动刷新（重新发送）周围区块，触发客户端重新渲染
+    usage: /<command> [半径|view|here|reload|help]
+    aliases: [rc, chunkrefresh, refreshchunks]
+permissions:
+  chunkrefresher.use:
+    description: 允许使用 /refreshchunk 刷新周围区块（默认对所有玩家开放，无需额外授权）
+    default: true
+  chunkrefresher.reload:
+    description: 允许热重载 ChunkRefresher 的 config.yml 与 messages.yml
+    default: op
+  chunkrefresher.bypass.cooldown:
+    description: 无视刷新冷却
+    default: op
+  chunkrefresher.bypass.limit:
+    description: 忽略 config.yml 中的 max-radius 限制（仍受 absolute-max-radius 硬上限约束）
+    default: op
