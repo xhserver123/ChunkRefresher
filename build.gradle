@@ -1,0 +1,59 @@
+plugins {
+    id 'java'
+}
+
+version = project.plugin_version
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'papermc'
+        url = 'https://repo.papermc.io/repository/maven-public/'
+    }
+}
+
+dependencies {
+    // Paper API：仅编译期使用，运行期由服务端提供（Paper 26.2 / Minecraft Java 26.2）
+    compileOnly 'io.papermc.paper:paper-api:26.2.build.98-stable'
+    // 空值注解（Paper API 亦依赖该库，这里显式声明保证编译期可用）
+    compileOnly 'org.jetbrains:annotations:24.1.0'
+
+    // 单元测试：校验区域计算与玩家状态（不依赖服务端运行环境）
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = Integer.parseInt(project.java_release)
+    options.encoding = 'UTF-8'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+processResources {
+    // 将 plugin.yml 中的 ${version} 展开为 gradle.properties 中的实际版本
+    inputs.property 'version', project.version
+    filesMatching('plugin.yml') {
+        expand 'version': inputs.properties.version
+    }
+}
+
+jar {
+    // MIT 许可证随产物打包（规范要求，重命名为 LICENSE_<archivesName>）
+    from('LICENSE') {
+        rename { "${it}_${project.base.archivesName.get()}" }
+    }
+}
