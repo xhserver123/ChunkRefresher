@@ -1,0 +1,41 @@
+# ============================================================
+#  ChunkRefresher 配置（Paper 26.2 / Minecraft Java 26.2）
+#  命令：/refreshchunk [半径|view|here|reload|help]
+#  说明：这里的“半径”以区块为单位，1 表示以玩家为中心 3×3 = 9 个区块。
+#  所有文本（前缀、提示、帮助）都在 messages.yml 中配置。
+# ============================================================
+
+refresh:
+  # 无参数执行 /refreshchunk 时使用的默认模式：
+  #   view-distance —— 视距模式：刷新“玩家附近全部视距 + view-distance-extra 圈”（推荐，默认）
+  #   fixed         —— 固定半径模式：使用下面的 default-radius
+  default-mode: view-distance
+
+  # 视距模式下额外附加的圈数；2 表示“视距 + 2”
+  # 实际半径 = min(服务端为该玩家下发的视距, 客户端渲染距离) + view-distance-extra
+  view-distance-extra: 2
+
+  # fixed 模式下不带参数执行 /refreshchunk 时使用的半径
+  default-radius: 1
+
+  # 通过 /refreshchunk <半径> 指定半径时，普通玩家允许的最大值
+  # （拥有 chunkrefresher.bypass.limit 权限者可突破；视距模式不受该项限制）
+  max-radius: 16
+
+  # 硬上限：任何玩家（含 bypass 权限、含视距模式）都不会超过此半径，防止误操作压垮服务端
+  # 实际视距通常为 8~12，留 32 已足够覆盖“视距 + 2”
+  absolute-max-radius: 32
+
+  # 每 tick 最多重新发送的区块数量（削峰）
+  # 视距模式一次可能要刷新数百个区块，数值越小越平滑、总耗时越长
+  chunks-per-tick: 32
+
+  # 是否用动作栏（快捷栏上方）显示刷新进度
+  show-progress: true
+
+cooldown:
+  # 冷却开关；拥有 chunkrefresher.bypass.cooldown 权限的玩家不受限制
+  enabled: true
+
+  # 冷却时间（秒）
+  seconds: 10
